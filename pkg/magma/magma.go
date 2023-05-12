@@ -6,7 +6,6 @@ import (
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"os"
-	"strings"
 )
 
 type Proposal struct {
@@ -66,9 +65,19 @@ type APIDataList struct {
 	Apis []APIData `json:"apis"`
 }
 
+type ApiMethod struct {
+	Name string `yaml:"name"`
+	Args *int16 `yaml:"args"`
+}
+
 type InputTemplate struct {
-	ChainType  string   `yaml:"chain_type"`
-	ApiMethods []string `yaml:"api_methods"`
+	ChainType  string        `yaml:"chain_type"`
+	ApiMethods []interface{} `yaml:"api_methods"`
+}
+
+type ParsedInputTemplate struct {
+	ChainType  string
+	ApiMethods []ApiMethod
 }
 
 // LOGIC:
@@ -89,55 +98,76 @@ func GenerateSpec(inputFileName string, chainNameFlag string, chainIdxFlag strin
 		return err
 	}
 
-	// Convert the byte slice to a string and split it into lines
-	fileContent := string(fileBytes)
+	inputTemplate := InputTemplate{}
+	err = yaml.Unmarshal(fileBytes, &inputTemplate)
 
-	// TODO: parse yaml
-
-	data := APIDataList{
-		Apis: make([]APIData, 0),
-	}
-
-	// Iterate through the lines
-	for _, line := range lines {
-		fmt.Println(line)
-		// Skip empty lines
-		if strings.TrimSpace(line) == "" {
-			continue
-		}
-		newData := APIData{
-			Name: line,
-			BlockParsing: BlockParsingData{
-				ParserArg:  []string{"latest"},
-				ParserFunc: "DEFAULT",
-			},
-			ComputeUnits: "10",
-			Enabled:      true,
-			ApiInterfaces: []ApiInterfaceData{
-				{
-					Category: CategoryData{
-						Deterministic: false,
-						Local:         false,
-						Subscription:  false,
-						Stateful:      0,
-					},
-					Interface:         "jsonrpc",
-					Type:              "POST",
-					ExtraComputeUnits: "0",
-				},
-			},
-		}
-		data.Apis = append(data.Apis, newData)
-
-	}
-
-	// Write the JSON data to a file
-	err = WriteJSONFile("output.json", data, chainNameFlag, chainIdxFlag)
 	if err != nil {
-		fmt.Println("Error writing JSON file:", err)
-		return nil
+		fmt.Printf("error: %v", err)
+		return err
 	}
-	fmt.Println("JSON file written successfully.")
+
+	parsedApiMethods := []ApiMethod{}
+
+	for _, method := range inputTemplate.ApiMethods {
+		switch v := method.(type) {
+		case string:
+			method = ApiMethod{Name: method.(string), Args: nil}
+			parsedApiMethods = append(parsedApiMethods, method.(ApiMethod))
+		case map[string]interface{}:
+			fmt.Printf("unknown type %T", v)
+			method = ApiMethod{Name: v["name"].(string), Args: v["args"].(*int16)}
+			parsedApiMethods = append(parsedApiMethods, method.(ApiMethod))
+		default:
+			return fmt.Errorf("unknown type %T", v)
+		}
+	}
+
+	// parsedInputTemplate := ParsedInputTemplate{ChainType: inputTemplate.ChainType, ApiMethods: parsedApiMethods}
+
+	// data := APIDataList{
+	// 	Apis: make([]APIData, 0),
+	// }
+
+	// // Iterate through the lines
+	// for _, line := range lines {
+	// 	fmt.Println(line)
+	// 	// Skip empty lines
+	// 	if strings.TrimSpace(line) == "" {
+	// 		continue
+	// 	}
+	// 	newData := APIData{
+	// 		Name: line,
+	// 		BlockParsing: BlockParsingData{
+	// 			ParserArg:  []string{"latest"},
+	// 			ParserFunc: "DEFAULT",
+	// 		},
+	// 		ComputeUnits: "10",
+	// 		Enabled:      true,
+	// 		ApiInterfaces: []ApiInterfaceData{
+	// 			{
+	// 				Category: CategoryData{
+	// 					Deterministic: false,
+	// 					Local:         false,
+	// 					Subscription:  false,
+	// 					Stateful:      0,
+	// 				},
+	// 				Interface:         "jsonrpc",
+	// 				Type:              "POST",
+	// 				ExtraComputeUnits: "0",
+	// 			},
+	// 		},
+	// 	}
+	// 	data.Apis = append(data.Apis, newData)
+	//
+	// }
+	//
+	// // Write the JSON data to a file
+	// err = WriteJSONFile("output.json", data, chainNameFlag, chainIdxFlag)
+	// if err != nil {
+	// 	fmt.Println("Error writing JSON file:", err)
+	// 	return nil
+	// }
+	// fmt.Println("JSON file written successfully.")
 
 	return nil
 }
