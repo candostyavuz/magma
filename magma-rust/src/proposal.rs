@@ -152,3 +152,15 @@ impl CategoryData {
         }
     }
 }
+
+impl Default for CategoryData {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl Default for ApiInterfaceData {
+    fn default() -> Self {
+        Self::new()
+    }
+}
