@@ -164,8 +164,8 @@ impl From<ApiMethod> for ApiData {
         Self {
             name: api.name().to_string(),
             block_parsing: BlockParsingData {
-                parse_arg: vec!["latest".to_string()],
-                parse_func: "DEFAULT".to_string(),
+                parse_arg: vec![api.parse_arg()],
+                parse_func: api.parse_func(),
             },
             compute_units: constants::COMPUTE_UNITS.to_string(),
             enabled: constants::API_ENABLED,
