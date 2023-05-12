@@ -1,4 +1,4 @@
-chain_type: ETH
+chain_index: ETH
 api_methods: 
   - name: random_name
     args: 3

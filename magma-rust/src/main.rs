@@ -1,11 +1,12 @@
 pub mod constants;
-pub mod gen_spec;
+pub mod generate_spec;
 pub mod input;
-pub mod spec;
+pub mod proposal;
 
 use std::path::PathBuf;
 
 use clap::{Parser, Subcommand};
+use colored::Colorize;
 use eyre::Result;
 
 #[derive(Parser)]
@@ -33,7 +34,21 @@ enum Commands {
         visible_aliases = ["gen", "g"], 
         about = "Generates a valid spec file from a list of supported api calls. Currently, the only supported input format for the spec file is yaml file"
     )]
-    GenerateSpec { input_file: PathBuf },
+    GenerateSpec(GenerateSpecArgs),
+}
+
+#[derive(Parser)]
+pub struct GenerateSpecArgs {
+    pub input_file: PathBuf,
+
+    #[arg(long, help = "The chain name", required = false)]
+    pub chain_name: Option<String>,
+
+    #[arg(short, long, help = "Imports", required = false)]
+    pub imports: Option<Vec<String>>,
+
+    #[arg(short, long, help = "The output file", required = false)]
+    pub output_file: Option<PathBuf>,
 }
 
 fn main() -> Result<()> {
@@ -42,9 +57,16 @@ fn main() -> Result<()> {
 
     let cli = Cli::parse();
 
+    if let Some(log_level) = cli.log_level {
+        let log_level = log_level.parse::<log::LevelFilter>()?;
+        log::set_max_level(log_level);
+    }
+
     match cli.command {
-        Commands::GenerateSpec { input_file } => {
-            let gen_spec = gen_spec::GenSpec::try_new(input_file)?;
+        Commands::GenerateSpec(gen_spec) => {
+            println!("{}", "Generating spec file".green());
+
+            let gen_spec = generate_spec::GenerateSpec::try_new(gen_spec)?;
             gen_spec.run()?;
         }
     };

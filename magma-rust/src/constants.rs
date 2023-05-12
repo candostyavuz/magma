@@ -1,4 +1,4 @@
-pub const ENABLED: bool = true;
+pub const SPEC_ENABLED: bool = true;
 pub const RELIABILITY_THRESHOLD: u32 = 268435455;
 pub const DATA_RELIABILITY_ENABLED: bool = true;
 pub const BLOCK_DISTANCE_FOR_FINALIZED_DATA: u64 = 64;
@@ -8,8 +8,24 @@ pub const ALLOWED_BLOCK_LAG_FOR_QOS_SYNC: &str = "2";
 pub const DENOM: &str = "ulava";
 pub const AMOUNT: &str = "50000000000";
 
-pub fn enabled() -> bool {
-    ENABLED
+pub const COMPUTE_UNITS: &str = "10";
+pub const API_ENABLED: bool = true;
+
+pub mod api_interfaces {
+    pub const INTERFACE: &str = "jsonrpc";
+    pub const TYPE: &str = "POST";
+    pub const EXTRA_COMPUTE_UNITS: &str = "0";
+
+    pub mod category_data {
+        pub const DETERMINISTIC: bool = false;
+        pub const LOCAL: bool = false;
+        pub const SUBSCRIPTION: bool = false;
+        pub const STATEFUL: i32 = 0;
+    }
+}
+
+pub fn spec_enabled() -> bool {
+    SPEC_ENABLED
 }
 
 pub fn reliability_threshold() -> u32 {
