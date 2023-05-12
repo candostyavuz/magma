@@ -56,6 +56,11 @@ fn main() -> Result<()> {
 
     let cli = Cli::parse();
 
+    if let Some(log_level) = cli.log_level {
+        let log_level = log_level.parse::<log::LevelFilter>()?;
+        log::set_max_level(log_level);
+    }
+
     match cli.command {
         Commands::GenerateSpec(gen_spec) => {
             let gen_spec = generate_spec::GenerateSpec::try_new(gen_spec)?;

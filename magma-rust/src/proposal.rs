@@ -1,4 +1,4 @@
-use crate::constants;
+use crate::{constants, input::ApiMethod};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -12,7 +12,7 @@ pub struct Proposal {
 pub struct Spec {
     index: String,
     name: String,
-    #[serde(default = "constants::enabled")]
+    #[serde(default = "constants::spec_enabled")]
     enabled: bool,
     #[serde(default = "constants::reliability_threshold")]
     reliability_threshold: u32,
@@ -99,7 +99,7 @@ impl Spec {
             name,
             index,
             apis,
-            enabled: enabled(),
+            enabled: spec_enabled(),
             reliability_threshold: reliability_threshold(),
             data_reliability_enabled: data_reliability_enabled(),
             block_distance_for_finalized_data: block_distance_for_finalized_data(),
@@ -108,6 +108,47 @@ impl Spec {
             allowed_block_lag_for_qos_sync: allowed_block_lag_for_qos_sync(),
             min_stake_provider: Default::default(),
             min_stake_client: Default::default(),
+        }
+    }
+}
+
+impl From<ApiMethod> for ApiData {
+    fn from(api: ApiMethod) -> Self {
+        Self {
+            name: api.name().to_string(),
+            block_parsing: BlockParsingData {
+                parse_arg: vec!["latest".to_string()],
+                parse_func: "DEFAULT".to_string(),
+            },
+            compute_units: constants::COMPUTE_UNITS.to_string(),
+            enabled: constants::API_ENABLED,
+            api_interfaces: vec![ApiInterfaceData::new()],
+        }
+    }
+}
+
+impl ApiInterfaceData {
+    pub fn new() -> Self {
+        use crate::constants::api_interfaces::*;
+
+        Self {
+            category: CategoryData::new(),
+            interface: INTERFACE.to_string(),
+            _type: TYPE.to_string(),
+            extra_compute_units: EXTRA_COMPUTE_UNITS.to_string(),
+        }
+    }
+}
+
+impl CategoryData {
+    pub fn new() -> Self {
+        use crate::constants::api_interfaces::category_data::*;
+
+        Self {
+            deterministic: DETERMINISTIC,
+            local: LOCAL,
+            subscription: SUBSCRIPTION,
+            stateful: STATEFUL,
         }
     }
 }
