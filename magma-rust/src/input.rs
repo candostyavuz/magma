@@ -15,6 +15,8 @@ pub struct ApiMethodWithArgs {
 
 #[derive(Deserialize, Debug)]
 pub struct InputTemplate {
-    pub chain_type: String,
+    pub chain_name: Option<String>,
+
+    pub chain_index: String,
     pub api_methods: Vec<ApiMethod>,
 }

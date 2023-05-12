@@ -2,6 +2,13 @@ use crate::constants;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
+pub struct Proposal {
+    title: String,
+    description: String,
+    specs: Vec<Spec>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Spec {
     index: String,
     name: String,
@@ -19,7 +26,9 @@ pub struct Spec {
     average_block_time: String,
     #[serde(default = "constants::allowed_block_lag_for_qos_sync")]
     allowed_block_lag_for_qos_sync: String,
+    #[serde(default)]
     min_stake_provider: MinStake,
+    #[serde(default)]
     min_stake_client: MinStake,
     apis: ApiDataList,
 }
@@ -65,4 +74,23 @@ pub struct CategoryData {
     pub local: bool,
     pub subscription: bool,
     pub stateful: i32,
+}
+
+impl Default for MinStake {
+    fn default() -> Self {
+        Self {
+            denom: constants::denom(),
+            amount: constants::amount(),
+        }
+    }
+}
+
+impl Proposal {
+    pub fn new(title: String, description: String, specs: Vec<Spec>) -> Self {
+        Self {
+            title,
+            description,
+            specs,
+        }
+    }
 }
