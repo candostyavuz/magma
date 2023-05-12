@@ -3,7 +3,7 @@ package magma
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"strings"
 )
@@ -82,7 +82,7 @@ func GenerateSpec(fileName string, chainNameFlag string, chainIdxFlag string) er
 	defer file.Close()
 
 	// Read the file contents into memory as a byte slice
-	fileBytes, err := ioutil.ReadAll(file)
+	fileBytes, err := io.ReadAll(file)
 	if err != nil {
 		fmt.Println("Error reading file:", err)
 		return err
