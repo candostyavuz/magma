@@ -52,10 +52,17 @@ impl GenerateSpec {
             .or_else(|| self.input.chain_name.clone())
             .unwrap_or_else(|| self.input.chain_index.to_string());
 
-        let full_title = format!("Add specs: {chain_name}");
+        let full_title = if let Some(title) = self.args.title {
+            title
+        } else {
+            format!("Add specs: {chain_name}")
+        };
 
-        let description =
-            format!("Adding new specification support for relaying {chain_name} data on Lava");
+        let description = if let Some(description) = self.args.description {
+            description
+        } else {
+            format!("Adding new specification support for relaying {chain_name} data on Lava")
+        };
 
         let apis: Vec<ApiData> = self.input.api_methods.into_iter().map(Into::into).collect();
 
