@@ -4,6 +4,10 @@ import (
 	"strconv"
 )
 
+func GenerateSpec(input string) error {
+	return nil
+}
+
 func Reverse(input string) (result string) {
 	for _, c := range input {
 		result = string(c) + result
