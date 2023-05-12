@@ -1,5 +1,7 @@
 chain_type: ETH
 api_methods: 
+  - name: random_name
+    args: 3
   - eth_blockNumber
   - eth_sendRawTransaction
   - eth_getBalance

@@ -66,8 +66,8 @@ type APIDataList struct {
 }
 
 type ApiMethod struct {
-	Name string `yaml:"name"`
-	Args *int16 `yaml:"args"`
+	Name string
+	Args *int
 }
 
 type InputTemplate struct {
@@ -111,13 +111,15 @@ func GenerateSpec(inputFileName string, chainNameFlag string, chainIdxFlag strin
 	for _, method := range inputTemplate.ApiMethods {
 		switch v := method.(type) {
 		case string:
+			fmt.Printf("method %T", method)
 			method = ApiMethod{Name: method.(string), Args: nil}
 			parsedApiMethods = append(parsedApiMethods, method.(ApiMethod))
 		case map[string]interface{}:
 			fmt.Printf("unknown type %T", v)
-			method = ApiMethod{Name: v["name"].(string), Args: v["args"].(*int16)}
+			method = ApiMethod{Name: method.name, Args: method["args"]}
 			parsedApiMethods = append(parsedApiMethods, method.(ApiMethod))
 		default:
+			fmt.Printf("unknown type %T", v)
 			return fmt.Errorf("unknown type %T", v)
 		}
 	}
