@@ -10,10 +10,10 @@ import (
 var version = "0.0.1"
 
 var rootCmd = &cobra.Command{
-	Use:     "specautomator",
+	Use:     "magma",
 	Version: version,
-	Short:   "specautomator - a simple CLI to create specs",
-	Long:    `specautomator a CLI tool for creating specs for lava`,
+	Short:   "magma - a simple CLI to create specs",
+	Long:    `magma a CLI tool for creating specs for lava`,
 	Run: func(cmd *cobra.Command, args []string) {
 	},
 }

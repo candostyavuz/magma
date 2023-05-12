@@ -18,7 +18,7 @@ go install
 
 3. Run CLI command with sample input file:
 ```bash
-specautomator genspec input
+magma genspec input
 ```
 
 4. Generated spec will be written into `output.json` file 
