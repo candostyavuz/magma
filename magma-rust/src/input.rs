@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::proposal::NetworkName;
+
 #[derive(Deserialize, Serialize, Debug, Clone)]
 #[serde(untagged)]
 pub enum ApiMethod {
@@ -14,11 +16,19 @@ pub struct ApiMethodWithArgs {
 }
 
 #[derive(Deserialize, Debug, Clone)]
-pub struct InputTemplate {
+pub struct InputTemplate(pub Vec<InputItem>);
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct InputItem {
     pub chain_name: Option<String>,
 
-    pub chain_index: String,
+    pub chain_index: NetworkName,
+
+    #[serde(default)]
     pub api_methods: Vec<ApiMethod>,
+
+    #[serde(default)]
+    pub imports: Vec<NetworkName>,
 }
 
 impl ApiMethod {

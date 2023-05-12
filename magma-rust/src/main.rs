@@ -41,11 +41,14 @@ enum Commands {
 pub struct GenerateSpecArgs {
     pub input_file: PathBuf,
 
+    #[arg(short, long, help = "The title for the spec", required = false)]
+    pub title: Option<String>,
+
+    #[arg(short, long, help = "The description for the spec", required = false)]
+    pub description: Option<String>,
+
     #[arg(long, help = "The chain name", required = false)]
     pub chain_name: Option<String>,
-
-    #[arg(short, long, help = "Imports", required = false)]
-    pub imports: Option<Vec<String>>,
 
     #[arg(short, long, help = "The output file", required = false)]
     pub output_file: Option<PathBuf>,

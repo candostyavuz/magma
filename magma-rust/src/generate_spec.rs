@@ -1,4 +1,3 @@
-use crate::proposal::{ApiData, Spec};
 use crate::GenerateSpecArgs;
 use crate::{input, proposal::Proposal};
 use colored::Colorize;
@@ -45,22 +44,19 @@ impl GenerateSpec {
     }
 
     fn create_proposal_struct(self) -> Proposal {
-        let chain_name = self
-            .args
-            .chain_name
-            .clone()
-            .or_else(|| self.input.chain_name.clone())
-            .unwrap_or_else(|| self.input.chain_index.clone());
+        let full_title = if let Some(title) = self.args.title {
+            title
+        } else {
+            format!("Adding specs")
+        };
 
-        let full_title = format!("Add specs: {chain_name}");
+        let description = if let Some(description) = self.args.description {
+            description
+        } else {
+            format!("Adding new specification support for relaying data on Lava")
+        };
 
-        let description =
-            format!("Adding new specification support for relaying {chain_name} data on Lava");
-
-        let apis: Vec<ApiData> = self.input.api_methods.into_iter().map(Into::into).collect();
-
-        let specs = Spec::new(chain_name, self.input.chain_index, apis);
-
-        Proposal::new(full_title, description, vec![specs])
+        let specs = self.input.0.into_iter().map(Into::into).collect();
+        Proposal::new(full_title, description, specs)
     }
 }
