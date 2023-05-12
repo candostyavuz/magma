@@ -31,6 +31,7 @@ pub struct Spec {
     #[serde(default)]
     min_stake_client: MinStake,
 
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub apis: Vec<ApiData>,
 }
 
