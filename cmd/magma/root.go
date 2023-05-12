@@ -1,4 +1,4 @@
-package specautomator
+package magma
 
 import (
 	"fmt"

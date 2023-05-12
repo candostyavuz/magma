@@ -1,4 +1,4 @@
-module github.com/candostyavuz/specautomator
+module github.com/candostyavuz/magma
 
 go 1.19
 

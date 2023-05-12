@@ -1,9 +1,9 @@
-package specautomator
+package magma
 
 import (
 	"fmt"
 
-	"github.com/candostyavuz/specautomator/pkg/specautomator"
+	"github.com/candostyavuz/magma/pkg/magma"
 	"github.com/spf13/cobra"
 )
 
@@ -24,7 +24,7 @@ var genspecCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		err = specautomator.GenerateSpec(args[0], chainName, chainIdx)
+		err = magma.GenerateSpec(args[0], chainName, chainIdx)
 		return err
 	},
 }

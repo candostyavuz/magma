@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/candostyavuz/specautomator/cmd/specautomator"
+	"github.com/candostyavuz/magma/cmd/magma"
 )
 
 func main() {
-	specautomator.Execute()
+	magma.Execute()
 }
