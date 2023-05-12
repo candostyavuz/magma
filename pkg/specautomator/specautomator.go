@@ -66,7 +66,7 @@ type APIDataList struct {
 }
 
 // LOGIC:
-func GenerateSpec(fileName string) error {
+func GenerateSpec(fileName string, chainNameFlag string, chainIdxFlag string) error {
 
 	// Check if fileName has ".txt" extension, and add it if not
 	if !strings.HasSuffix(fileName, ".txt") {
@@ -130,7 +130,7 @@ func GenerateSpec(fileName string) error {
 	}
 
 	// Write the JSON data to a file
-	err = WriteJSONFile("output.json", data)
+	err = WriteJSONFile("output.json", data, chainNameFlag, chainIdxFlag)
 	if err != nil {
 		fmt.Println("Error writing JSON file:", err)
 		return nil
@@ -140,7 +140,7 @@ func GenerateSpec(fileName string) error {
 	return nil
 }
 
-func WriteJSONFile(fileName string, data APIDataList) error {
+func WriteJSONFile(fileName string, data APIDataList, chainNameFlag string, chainIdxFlag string) error {
 	// Write the JSON data to a file
 	file, err := os.Create(fileName)
 	if err != nil {
@@ -149,11 +149,11 @@ func WriteJSONFile(fileName string, data APIDataList) error {
 	defer file.Close()
 
 	dataWithHeader := Proposal{
-		Title:       "",
-		Description: "",
+		Title:       "Add Specs: " + chainNameFlag,
+		Description: "Adding new specification support for relaying " + chainNameFlag + " data on Lava",
 		Specs: []Spec{
-			{Index: "",
-				Name:                          "",
+			{Index: chainIdxFlag,
+				Name:                          chainNameFlag,
 				Enabled:                       true,
 				ReliabilityThreshold:          268435455,
 				DataReliabilityEnabled:        true,

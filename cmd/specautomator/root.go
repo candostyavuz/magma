@@ -15,7 +15,6 @@ var rootCmd = &cobra.Command{
 	Short:   "specautomator - a simple CLI to create specs",
 	Long:    `specautomator a CLI tool for creating specs for lava`,
 	Run: func(cmd *cobra.Command, args []string) {
-
 	},
 }
 
