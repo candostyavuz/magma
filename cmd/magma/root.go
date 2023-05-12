@@ -15,6 +15,10 @@ var rootCmd = &cobra.Command{
 	Short:   "magma - a simple CLI to create specs",
 	Long:    `magma a CLI tool for creating specs for lava`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) == 0 {
+			cmd.Help()
+			os.Exit(0)
+		}
 	},
 }
 
