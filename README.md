@@ -21,7 +21,12 @@ go install
 magma genspec input
 ```
 
-4. Generated spec will be written into `output.json` file 
+4. You can use flags:
+```bash
+magma genspec input --chain-name Ethereum --chain-idx ETH1
+```
+
+5. Generated spec will be written into `output.json` file 
 
 
 
