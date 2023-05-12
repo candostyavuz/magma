@@ -47,13 +47,13 @@ impl GenerateSpec {
         let full_title = if let Some(title) = self.args.title {
             title
         } else {
-            format!("Adding specs")
+            "Adding specs".to_string()
         };
 
         let description = if let Some(description) = self.args.description {
             description
         } else {
-            format!("Adding new specification support for relaying data on Lava")
+            "Adding new specification support for relaying data on Lava".to_string()
         };
 
         let specs = self.input.0.into_iter().map(Into::into).collect();
