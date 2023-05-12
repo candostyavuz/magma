@@ -8,6 +8,32 @@ import (
 	"strings"
 )
 
+type Proposal struct {
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Specs       []Spec `json:"specs"`
+}
+
+type Spec struct {
+	Index                         string      `json:"index"`
+	Name                          string      `json:"name"`
+	Enabled                       bool        `json:"enabled"`
+	ReliabilityThreshold          uint32      `json:"reliability_threshold"`
+	DataReliabilityEnabled        bool        `json:"data_reliability_enabled"`
+	BlockDistanceForFinalizedData uint64      `json:"block_distance_for_finalized_data"`
+	BlocksInFinalizationProof     uint8       `json:"blocks_in_finalization_proof"`
+	AverageBlockTime              string      `json:"average_block_time"`
+	AllowedBlockLagForQosSync     string      `json:"allowed_block_lag_for_qos_sync"`
+	MinStakeProvider              MinStake    `json:"min_stake_provider"`
+	MinStakeClient                MinStake    `json:"min_stake_client"`
+	APIs                          APIDataList `json:"apis"`
+}
+
+type MinStake struct {
+	Denom  string `json:"denom"`
+	Amount string `json:"amount"`
+}
+
 type APIData struct {
 	Name          string             `json:"name"`
 	BlockParsing  BlockParsingData   `json:"block_parsing"`
@@ -115,18 +141,43 @@ func GenerateSpec(fileName string) error {
 }
 
 func WriteJSONFile(fileName string, data APIDataList) error {
-	// Marshal the data into JSON format
-	jsonData, err := json.MarshalIndent(data, "", "    ")
-	if err != nil {
-		return err
-	}
-
 	// Write the JSON data to a file
 	file, err := os.Create(fileName)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
+
+	dataWithHeader := Proposal{
+		Title:       "",
+		Description: "",
+		Specs: []Spec{
+			{Index: "",
+				Name:                          "",
+				Enabled:                       true,
+				ReliabilityThreshold:          268435455,
+				DataReliabilityEnabled:        true,
+				BlockDistanceForFinalizedData: 64,
+				BlocksInFinalizationProof:     3,
+				AverageBlockTime:              "13000",
+				AllowedBlockLagForQosSync:     "2",
+				MinStakeProvider: MinStake{
+					Denom:  "ulava",
+					Amount: "50000000000",
+				},
+				MinStakeClient: MinStake{
+					Denom:  "ulava",
+					Amount: "50000000000",
+				},
+				APIs: data,
+			},
+		},
+	}
+	// Marshal the header into JSON format
+	jsonData, err := json.MarshalIndent(dataWithHeader, "", "    ")
+	if err != nil {
+		return err
+	}
 
 	_, err = file.Write(jsonData)
 	if err != nil {
