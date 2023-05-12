@@ -1,4 +1,4 @@
-package specautomator
+package magma
 
 const (
 	Enabled                       = true
