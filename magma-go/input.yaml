@@ -1,23 +1,25 @@
 chain-type: ETH
 api_methods:
 - name: eth_blockNumber
-  args: 0
+  args: 1
 - name: eth_sendRawTransaction
-  args: 0
+  args: 1
 - name: eth_getBalance
-  args: 0
+  args: 2
 - name: eth_getStorageAt
-  args: 0
+  args: 1
 - name: eth_getTransactionCount
-  args: 0
+  args: 2
 - name: eth_getCode
-  args: 0
+  args: 2
 - name: eth_call
-  args: 0
+  args: 1
 - name: eth_estimateGas
   args: 0
 - name: eth_getBlockTransactionCountByHash
+  args: 0
 - name: eth_getBlockTransactionCountByNumber
+  args: 0
 - name: eth_getUncleCountByBlockHash
   args: 0
 - name: eth_getUncleCountByBlockNumber
@@ -41,7 +43,7 @@ api_methods:
 - name: web3_clientVersion
   args: 0
 - name: web3_sha3
-  args: 0
+  args: 1
 - name: net_version
   args: 0
 - name: net_listening
@@ -67,7 +69,7 @@ api_methods:
 - name: eth_getBalance
   args: 0
 - name: eth_getStorageAt
-  args: 0
+  args: 3
 - name: eth_getTransactionCount
   args: 0
 - name: eth_getBlockTransactionCountByHash
@@ -89,15 +91,15 @@ api_methods:
 - name: eth_sendRawTransaction
   args: 0
 - name: eth_call
-  args: 0
+  args: 2
 - name: eth_estimateGas
   args: 0
 - name: eth_getBlockByHash
-  args: 0
+  args: 2
 - name: eth_getBlockByNumber
-  args: 0
+  args: 2
 - name: eth_getTransactionByHash
-  args: 0
+  args: 2
 - name: eth_getTransactionByBlockHashAndIndex
   args: 0
 - name: eth_getTransactionByBlockNumberAndIndex

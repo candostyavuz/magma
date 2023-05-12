@@ -6,6 +6,7 @@ import (
 	"gopkg.in/yaml.v3"
 	"io"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -107,62 +108,57 @@ func GenerateSpec(fileName string, chainNameFlag string, chainIdxFlag string) er
 		return err
 	}
 
-	//iterate through the API methods
+	//build structure to contain the Output
+	data := APIDataList{
+		Apis: make([]APIData, 0),
+	}
+
+	//iterate through the API methods and pass them into the Output structure
 	for _, method := range schema.APIMethods {
+		parseFunc := "DEFAULT"
+		parseArg := []string{"latest"}
+
+		if method.Args > 0 {
+			parseArg = []string{strconv.Itoa(method.Args)}
+			parseFunc = "PARSE_BY_ARG"
+		}
+
+		newData := APIData{
+			Name: method.Name,
+			BlockParsing: BlockParsingData{
+				ParserArg:  parseArg,
+				ParserFunc: parseFunc,
+			},
+			ComputeUnits: "10",
+			Enabled:      true,
+			ApiInterfaces: []ApiInterfaceData{
+				{
+					Category: CategoryData{
+						Deterministic: false,
+						Local:         false,
+						Subscription:  false,
+						Stateful:      0,
+					},
+					Interface:         "jsonrpc",
+					Type:              "POST",
+					ExtraComputeUnits: "0",
+				},
+			},
+		}
+		data.Apis = append(data.Apis, newData)
 		fmt.Printf("Method Implemented: %v \n", method.Name)
 	}
 
 	fmt.Printf("TOTAL METHODS IMPLEMENTED: %d  \n", len(schema.APIMethods))
 
-	/*	// Convert the byte slice to a string and split it into lines
-		fileContent := string(fileBytes)
-		lines := strings.Split(fileContent, "\n")
+	// Write the JSON data to a file
+	err = WriteJSONFile("output.json", data, chainNameFlag, chainIdxFlag)
+	if err != nil {
+		fmt.Println("Error writing JSON file:", err)
+		return nil
+	}
+	fmt.Println("JSON file written successfully.")
 
-		data := APIDataList{
-			Apis: make([]APIData, 0),
-		}
-
-		// Iterate through the lines
-		for _, line := range lines {
-			fmt.Println(line)
-			// Skip empty lines
-			if strings.TrimSpace(line) == "" {
-				continue
-			}
-			newData := APIData{
-				Name: line,
-				BlockParsing: BlockParsingData{
-					ParserArg:  []string{"latest"},
-					ParserFunc: "DEFAULT",
-				},
-				ComputeUnits: "10",
-				Enabled:      true,
-				ApiInterfaces: []ApiInterfaceData{
-					{
-						Category: CategoryData{
-							Deterministic: false,
-							Local:         false,
-							Subscription:  false,
-							Stateful:      0,
-						},
-						Interface:         "jsonrpc",
-						Type:              "POST",
-						ExtraComputeUnits: "0",
-					},
-				},
-			}
-			data.Apis = append(data.Apis, newData)
-
-		}
-
-		// Write the JSON data to a file
-		err = WriteJSONFile("output.json", data, chainNameFlag, chainIdxFlag)
-		if err != nil {
-			fmt.Println("Error writing JSON file:", err)
-			return nil
-		}
-		fmt.Println("JSON file written successfully.")
-	*/
 	return nil
 }
 
