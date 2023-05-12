@@ -1,5 +1,3 @@
-use std::io::Write;
-
 use crate::proposal::{ApiData, Spec};
 use crate::GenerateSpecArgs;
 use crate::{input, proposal::Proposal};
