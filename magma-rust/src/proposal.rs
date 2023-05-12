@@ -30,18 +30,14 @@ pub struct Spec {
     min_stake_provider: MinStake,
     #[serde(default)]
     min_stake_client: MinStake,
-    apis: ApiDataList,
+
+    pub apis: Vec<ApiData>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct MinStake {
     denom: String,
     amount: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct ApiDataList {
-    pub apis: Vec<ApiData>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -91,6 +87,27 @@ impl Proposal {
             title,
             description,
             specs,
+        }
+    }
+}
+
+impl Spec {
+    pub fn new(name: String, index: String, apis: Vec<ApiData>) -> Self {
+        use constants::*;
+
+        Self {
+            name,
+            index,
+            apis,
+            enabled: enabled(),
+            reliability_threshold: reliability_threshold(),
+            data_reliability_enabled: data_reliability_enabled(),
+            block_distance_for_finalized_data: block_distance_for_finalized_data(),
+            blocks_in_finalization_proof: blocks_in_finalization_proof(),
+            average_block_time: average_block_time(),
+            allowed_block_lag_for_qos_sync: allowed_block_lag_for_qos_sync(),
+            min_stake_provider: Default::default(),
+            min_stake_client: Default::default(),
         }
     }
 }
