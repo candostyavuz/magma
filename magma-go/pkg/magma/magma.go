@@ -96,7 +96,11 @@ func GenerateSpec(fileName string, chainNameFlag string, chainIdxFlag string) er
 
 	// Load the Input Template and Unmarshal the YAML data into memory
 	inputTemplate := &InputTemplate{}
-	yaml.Unmarshal(fileBytes, inputTemplate)
+	err = yaml.Unmarshal(fileBytes, inputTemplate)
+	if err != nil {
+		fmt.Println("Error unmarshalling YAML:", err)
+		return err
+	}
 
 	// Convert the byte slice to a string and split it into lines
 	fileContent := string(fileBytes)
