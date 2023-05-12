@@ -6,6 +6,7 @@ pub mod proposal;
 use std::path::PathBuf;
 
 use clap::{Parser, Subcommand};
+use colored::Colorize;
 use eyre::Result;
 
 #[derive(Parser)]
@@ -63,6 +64,8 @@ fn main() -> Result<()> {
 
     match cli.command {
         Commands::GenerateSpec(gen_spec) => {
+            println!("{}", "Generating spec file".green());
+
             let gen_spec = generate_spec::GenerateSpec::try_new(gen_spec)?;
             gen_spec.run()?;
         }

@@ -1,6 +1,7 @@
 use crate::proposal::{ApiData, Spec};
 use crate::GenerateSpecArgs;
 use crate::{input, proposal::Proposal};
+use colored::Colorize;
 use eyre::{Result, WrapErr};
 
 pub struct GenerateSpec {
@@ -14,6 +15,7 @@ impl GenerateSpec {
             std::fs::File::open(&args.input_file).wrap_err("Unable to open input file")?;
 
         let input = serde_yaml::from_reader(input_file_reader)?;
+        println!("Input file parsed successfully");
 
         Ok(Self { args, input })
     }
@@ -32,6 +34,11 @@ impl GenerateSpec {
         let proposal_json = serde_json::to_vec_pretty(&proposal)?;
 
         // write proposal to file
+        println!(
+            "Writing proposal to file: {}",
+            output_file_path.to_string_lossy().green()
+        );
+
         std::fs::write(output_file_path, proposal_json)?;
 
         Ok(())
