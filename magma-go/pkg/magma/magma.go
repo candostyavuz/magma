@@ -67,8 +67,13 @@ type APIDataList struct {
 }
 
 type InputTemplate struct {
+	ChainType  string      `yaml:"chain-type"`
+	APIMethods []APIMethod `yaml:"api_methods"`
+}
+
+type APIMethod struct {
 	Name string `yaml:"name"`
-	Args *int   `yaml:"args"`
+	Args int    `yaml:"args"`
 }
 
 // LOGIC:
@@ -95,62 +100,69 @@ func GenerateSpec(fileName string, chainNameFlag string, chainIdxFlag string) er
 	}
 
 	// Load the Input Template and Unmarshal the YAML data into memory
-	inputTemplate := &InputTemplate{}
-	err = yaml.Unmarshal(fileBytes, inputTemplate)
+	schema := &InputTemplate{}
+	err = yaml.Unmarshal(fileBytes, schema)
 	if err != nil {
 		fmt.Println("Error unmarshalling YAML:", err)
 		return err
 	}
 
-	// Convert the byte slice to a string and split it into lines
-	fileContent := string(fileBytes)
-	lines := strings.Split(fileContent, "\n")
-
-	data := APIDataList{
-		Apis: make([]APIData, 0),
+	//iterate through the API methods
+	for _, method := range schema.APIMethods {
+		fmt.Printf("Method Implemented: %v \n", method.Name)
 	}
 
-	// Iterate through the lines
-	for _, line := range lines {
-		fmt.Println(line)
-		// Skip empty lines
-		if strings.TrimSpace(line) == "" {
-			continue
+	fmt.Printf("TOTAL METHODS IMPLEMENTED: %d  \n", len(schema.APIMethods))
+
+	/*	// Convert the byte slice to a string and split it into lines
+		fileContent := string(fileBytes)
+		lines := strings.Split(fileContent, "\n")
+
+		data := APIDataList{
+			Apis: make([]APIData, 0),
 		}
-		newData := APIData{
-			Name: line,
-			BlockParsing: BlockParsingData{
-				ParserArg:  []string{"latest"},
-				ParserFunc: "DEFAULT",
-			},
-			ComputeUnits: "10",
-			Enabled:      true,
-			ApiInterfaces: []ApiInterfaceData{
-				{
-					Category: CategoryData{
-						Deterministic: false,
-						Local:         false,
-						Subscription:  false,
-						Stateful:      0,
-					},
-					Interface:         "jsonrpc",
-					Type:              "POST",
-					ExtraComputeUnits: "0",
+
+		// Iterate through the lines
+		for _, line := range lines {
+			fmt.Println(line)
+			// Skip empty lines
+			if strings.TrimSpace(line) == "" {
+				continue
+			}
+			newData := APIData{
+				Name: line,
+				BlockParsing: BlockParsingData{
+					ParserArg:  []string{"latest"},
+					ParserFunc: "DEFAULT",
 				},
-			},
+				ComputeUnits: "10",
+				Enabled:      true,
+				ApiInterfaces: []ApiInterfaceData{
+					{
+						Category: CategoryData{
+							Deterministic: false,
+							Local:         false,
+							Subscription:  false,
+							Stateful:      0,
+						},
+						Interface:         "jsonrpc",
+						Type:              "POST",
+						ExtraComputeUnits: "0",
+					},
+				},
+			}
+			data.Apis = append(data.Apis, newData)
+
 		}
-		data.Apis = append(data.Apis, newData)
 
-	}
-
-	// Write the JSON data to a file
-	err = WriteJSONFile("output.json", data, chainNameFlag, chainIdxFlag)
-	if err != nil {
-		fmt.Println("Error writing JSON file:", err)
-		return nil
-	}
-	fmt.Println("JSON file written successfully.")
-
+		// Write the JSON data to a file
+		err = WriteJSONFile("output.json", data, chainNameFlag, chainIdxFlag)
+		if err != nil {
+			fmt.Println("Error writing JSON file:", err)
+			return nil
+		}
+		fmt.Println("JSON file written successfully.")
+	*/
 	return nil
 }
 
