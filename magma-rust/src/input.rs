@@ -16,11 +16,19 @@ pub struct ApiMethodWithArgs {
 }
 
 #[derive(Deserialize, Debug, Clone)]
+pub struct Input(pub Vec<InputTemplate>);
+
+#[derive(Deserialize, Debug, Clone)]
 pub struct InputTemplate {
     pub chain_name: Option<String>,
 
     pub chain_index: NetworkName,
+
+    #[serde(default)]
     pub api_methods: Vec<ApiMethod>,
+
+    #[serde(default)]
+    pub imports: Option<Vec<NetworkName>>,
 }
 
 impl ApiMethod {

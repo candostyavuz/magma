@@ -6,7 +6,7 @@ use eyre::{Result, WrapErr};
 
 pub struct GenerateSpec {
     args: GenerateSpecArgs,
-    input: input::InputTemplate,
+    input: input::Input,
 }
 
 impl GenerateSpec {
@@ -45,29 +45,32 @@ impl GenerateSpec {
     }
 
     fn create_proposal_struct(self) -> Proposal {
-        let chain_name = self
-            .args
-            .chain_name
-            .clone()
-            .or_else(|| self.input.chain_name.clone())
-            .unwrap_or_else(|| self.input.chain_index.to_string());
-
         let full_title = if let Some(title) = self.args.title {
             title
         } else {
-            format!("Add specs: {chain_name}")
+            format!("Adding specs")
         };
 
         let description = if let Some(description) = self.args.description {
             description
         } else {
-            format!("Adding new specification support for relaying {chain_name} data on Lava")
+            format!("Adding new specification support for relaying data on Lava")
         };
 
-        let apis: Vec<ApiData> = self.input.api_methods.into_iter().map(Into::into).collect();
+        let mut specs: Vec<Spec> = Vec::with_capacity(self.input.0.len());
 
-        let specs = Spec::new(chain_name, self.input.chain_index, apis);
+        for input_item in self.input.0 {
+            let chain_name = input_item
+                .chain_name
+                .clone()
+                .unwrap_or_else(|| input_item.chain_index.to_string());
 
-        Proposal::new(full_title, description, vec![specs])
+            let apis: Vec<ApiData> = input_item.api_methods.into_iter().map(Into::into).collect();
+            let spec = Spec::new(chain_name, input_item.chain_index, apis);
+
+            specs.push(spec)
+        }
+
+        Proposal::new(full_title, description, specs)
     }
 }

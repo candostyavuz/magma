@@ -50,9 +50,6 @@ pub struct GenerateSpecArgs {
     #[arg(long, help = "The chain name", required = false)]
     pub chain_name: Option<String>,
 
-    #[arg(long, help = "Imports", required = false)]
-    pub imports: Option<Vec<String>>,
-
     #[arg(short, long, help = "The output file", required = false)]
     pub output_file: Option<PathBuf>,
 }
