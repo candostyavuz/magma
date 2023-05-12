@@ -50,7 +50,7 @@ impl GenerateSpec {
             .chain_name
             .clone()
             .or_else(|| self.input.chain_name.clone())
-            .unwrap_or_else(|| self.input.chain_index.clone());
+            .unwrap_or_else(|| self.input.chain_index.to_string());
 
         let full_title = format!("Add specs: {chain_name}");
 

@@ -1,4 +1,5 @@
-chain_index: ETH
+chain_index: ETH1
+chain_name: "Ethereum"
 api_methods: 
   - name: random_name
     args: 3

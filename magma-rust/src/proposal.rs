@@ -10,7 +10,7 @@ pub struct Proposal {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Spec {
-    index: String,
+    index: NetworkName,
     name: String,
     #[serde(default = "constants::spec_enabled")]
     enabled: bool,
@@ -72,6 +72,38 @@ pub struct CategoryData {
     pub stateful: i32,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, derive_more::Display)]
+pub enum NetworkName {
+    ALFAJORES,
+    APT1,
+    ARB1,
+    ARBN,
+    AXELAR,
+    AXELART,
+    BASET,
+    CANTO,
+    CELO,
+    COS3,
+    COS4,
+    COS5,
+    COS5T,
+    ETH1,
+    EVMOS,
+    EVMOST,
+    FTM250,
+    GTH1,
+    JUN1,
+    JUN1T,
+    JUNO,
+    JUNOT,
+    LAV1,
+    OPTM,
+    OPTMT,
+    POLYGON1,
+    POLYGON1T,
+    STRK,
+}
+
 impl Default for MinStake {
     fn default() -> Self {
         Self {
@@ -92,7 +124,7 @@ impl Proposal {
 }
 
 impl Spec {
-    pub fn new(name: String, index: String, apis: Vec<ApiData>) -> Self {
+    pub fn new(name: String, index: NetworkName, apis: Vec<ApiData>) -> Self {
         use constants::*;
 
         Self {
