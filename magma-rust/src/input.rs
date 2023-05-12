@@ -38,4 +38,18 @@ impl ApiMethod {
             ApiMethod::WithArgs(ApiMethodWithArgs { name, .. }) => name,
         }
     }
+
+    pub fn parse_arg(&self) -> String {
+        match self {
+            ApiMethod::JustMethod(_) => "latest".to_string(),
+            ApiMethod::WithArgs(ApiMethodWithArgs { args, .. }) => args.to_string(),
+        }
+    }
+
+    pub fn parse_func(&self) -> String {
+        match self {
+            ApiMethod::JustMethod(_) => "DEFAULT".to_string(),
+            ApiMethod::WithArgs(_) => "PARSE_BY_ARG".to_string(),
+        }
+    }
 }
