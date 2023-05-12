@@ -3,6 +3,7 @@ package magma
 import (
 	"encoding/json"
 	"fmt"
+	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -65,16 +66,16 @@ type APIDataList struct {
 	Apis []APIData `json:"apis"`
 }
 
-// LOGIC:
-func GenerateSpec(fileName string, chainNameFlag string, chainIdxFlag string) error {
+type InputTemplate struct {
+	ChainType  string   `yaml:"chain_type"`
+	ApiMethods []string `yaml:"api_methods"`
+}
 
-	// Check if fileName has ".txt" extension, and add it if not
-	if !strings.HasSuffix(fileName, ".txt") {
-		fileName += ".txt"
-	}
+// LOGIC:
+func GenerateSpec(inputFileName string, chainNameFlag string, chainIdxFlag string) error {
 
 	// Open the file
-	file, err := os.Open(fileName)
+	file, err := os.Open(inputFileName)
 	if err != nil {
 		fmt.Println("Error opening file:", err)
 		return err
@@ -90,7 +91,8 @@ func GenerateSpec(fileName string, chainNameFlag string, chainIdxFlag string) er
 
 	// Convert the byte slice to a string and split it into lines
 	fileContent := string(fileBytes)
-	lines := strings.Split(fileContent, "\n")
+
+	// TODO: parse yaml
 
 	data := APIDataList{
 		Apis: make([]APIData, 0),
