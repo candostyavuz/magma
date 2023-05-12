@@ -41,6 +41,7 @@ type APIData struct {
 	BlockParsing  BlockParsingData   `json:"block_parsing"`
 	ComputeUnits  string             `json:"compute_units"`
 	Enabled       bool               `json:"enabled"`
+	Imports       []string           `json:"imports"`
 	ApiInterfaces []ApiInterfaceData `json:"api_interfaces"`
 }
 
@@ -78,7 +79,7 @@ type APIMethod struct {
 }
 
 // LOGIC:
-func GenerateSpec(fileName string, chainNameFlag string, chainIdxFlag string) error {
+func GenerateSpec(fileName string, chainNameFlag string, chainIdxFlag string, imports []string) error {
 
 	// Check if fileName has ".yaml" extension, and add it if not
 	if !strings.HasSuffix(fileName, ".yaml") {
@@ -131,6 +132,7 @@ func GenerateSpec(fileName string, chainNameFlag string, chainIdxFlag string) er
 			},
 			ComputeUnits: "10",
 			Enabled:      true,
+			Imports:      imports,
 			ApiInterfaces: []ApiInterfaceData{
 				{
 					Category: CategoryData{

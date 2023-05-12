@@ -2,13 +2,13 @@ package magma
 
 import (
 	"fmt"
-
 	"github.com/candostyavuz/magma/pkg/magma"
+
 	"github.com/spf13/cobra"
 )
 
 var genspecCmd = &cobra.Command{
-	Use:     "genspec [supported-apis-file] | Flags: [--chain-name] , [--chain-idx]",
+	Use:     "genspec [supported-apis-file] | Flags: [--chain-name] , [--chain-idx], [--imports]",
 	Aliases: []string{"gen"},
 	Short:   "Generates a valid spec file from a list of supported api calls",
 	Long: `Generates a valid spec file from a list of supported api calls.
@@ -16,6 +16,11 @@ var genspecCmd = &cobra.Command{
 	Args: cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println("File is: ", args[0])
+		imports, err := cmd.Flags().GetStringArray("import")
+		fmt.Println(imports)
+		if err != nil {
+			return err
+		}
 		chainName, err := cmd.Flags().GetString("chain-name")
 		if err != nil {
 			return err
@@ -24,7 +29,8 @@ var genspecCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		err = magma.GenerateSpec(args[0], chainName, chainIdx)
+
+		err = magma.GenerateSpec(args[0], chainName, chainIdx, imports)
 		return err
 	},
 }
@@ -32,5 +38,6 @@ var genspecCmd = &cobra.Command{
 func init() {
 	genspecCmd.Flags().String("chain-name", "", "Chain Name")
 	genspecCmd.Flags().String("chain-idx", "", "Chain Index")
+	genspecCmd.Flags().StringArray("import", nil, "Imports for this spec")
 	rootCmd.AddCommand(genspecCmd)
 }
