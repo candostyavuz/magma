@@ -1,4 +1,7 @@
-use crate::{constants, input::ApiMethod};
+use crate::{
+    constants,
+    input::{ApiMethod, InputItem},
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -30,6 +33,9 @@ pub struct Spec {
     min_stake_provider: MinStake,
     #[serde(default)]
     min_stake_client: MinStake,
+
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub imports: Vec<NetworkName>,
 
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub apis: Vec<ApiData>,
@@ -124,13 +130,21 @@ impl Proposal {
     }
 }
 
-impl Spec {
-    pub fn new(name: String, index: NetworkName, apis: Vec<ApiData>) -> Self {
+impl From<InputItem> for Spec {
+    fn from(input: InputItem) -> Self {
         use constants::*;
+
+        let name = input
+            .chain_name
+            .clone()
+            .unwrap_or_else(|| input.chain_index.to_string());
+
+        let apis: Vec<ApiData> = input.api_methods.into_iter().map(Into::into).collect();
 
         Self {
             name,
-            index,
+            index: input.chain_index,
+            imports: input.imports,
             apis,
             enabled: spec_enabled(),
             reliability_threshold: reliability_threshold(),

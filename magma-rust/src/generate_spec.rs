@@ -1,4 +1,3 @@
-use crate::proposal::{ApiData, Spec};
 use crate::GenerateSpecArgs;
 use crate::{input, proposal::Proposal};
 use colored::Colorize;
@@ -6,7 +5,7 @@ use eyre::{Result, WrapErr};
 
 pub struct GenerateSpec {
     args: GenerateSpecArgs,
-    input: input::Input,
+    input: input::InputTemplate,
 }
 
 impl GenerateSpec {
@@ -57,20 +56,7 @@ impl GenerateSpec {
             format!("Adding new specification support for relaying data on Lava")
         };
 
-        let mut specs: Vec<Spec> = Vec::with_capacity(self.input.0.len());
-
-        for input_item in self.input.0 {
-            let chain_name = input_item
-                .chain_name
-                .clone()
-                .unwrap_or_else(|| input_item.chain_index.to_string());
-
-            let apis: Vec<ApiData> = input_item.api_methods.into_iter().map(Into::into).collect();
-            let spec = Spec::new(chain_name, input_item.chain_index, apis);
-
-            specs.push(spec)
-        }
-
+        let specs = self.input.0.into_iter().map(Into::into).collect();
         Proposal::new(full_title, description, specs)
     }
 }
