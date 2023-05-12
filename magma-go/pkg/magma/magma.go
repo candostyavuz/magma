@@ -3,6 +3,7 @@ package magma
 import (
 	"encoding/json"
 	"fmt"
+	"gopkg.in/yaml.v3"
 	"io"
 	"os"
 	"strings"
@@ -65,12 +66,17 @@ type APIDataList struct {
 	Apis []APIData `json:"apis"`
 }
 
+type InputTemplate struct {
+	Name string `yaml:"name"`
+	Args *int   `yaml:"args"`
+}
+
 // LOGIC:
 func GenerateSpec(fileName string, chainNameFlag string, chainIdxFlag string) error {
 
-	// Check if fileName has ".txt" extension, and add it if not
-	if !strings.HasSuffix(fileName, ".txt") {
-		fileName += ".txt"
+	// Check if fileName has ".yaml" extension, and add it if not
+	if !strings.HasSuffix(fileName, ".yaml") {
+		fileName += ".yaml"
 	}
 
 	// Open the file
@@ -87,6 +93,10 @@ func GenerateSpec(fileName string, chainNameFlag string, chainIdxFlag string) er
 		fmt.Println("Error reading file:", err)
 		return err
 	}
+
+	// Load the Input Template and Unmarshal the YAML data into memory
+	inputTemplate := &InputTemplate{}
+	yaml.Unmarshal(fileBytes, inputTemplate)
 
 	// Convert the byte slice to a string and split it into lines
 	fileContent := string(fileBytes)
