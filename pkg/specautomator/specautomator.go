@@ -1,33 +1,42 @@
 package specautomator
 
 import (
-	"strconv"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"strings"
 )
 
-func GenerateSpec(input string) error {
+func GenerateSpec(fileName string) error {
+
+	// Check if fileName has ".txt" extension, and add it if not
+	if !strings.HasSuffix(fileName, ".txt") {
+		fileName += ".txt"
+	}
+
+	// Open the file
+	file, err := os.Open(fileName)
+	if err != nil {
+		fmt.Println("Error opening file:", err)
+		return err
+	}
+	defer file.Close()
+
+	// Read the file contents into memory as a byte slice
+	fileBytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		fmt.Println("Error reading file:", err)
+		return err
+	}
+
+	// Convert the byte slice to a string and split it into lines
+	fileContent := string(fileBytes)
+	lines := strings.Split(fileContent, "\n")
+
+	// Iterate through the lines
+	for _, line := range lines {
+		fmt.Println(line)
+	}
+
 	return nil
-}
-
-func Reverse(input string) (result string) {
-	for _, c := range input {
-		result = string(c) + result
-	}
-	return result
-}
-
-func Inspect(input string, digits bool) (count int, kind string) {
-	if !digits {
-		return len(input), "char"
-	}
-	return inspectNumbers(input), "digit"
-}
-
-func inspectNumbers(input string) (count int) {
-	for _, c := range input {
-		_, err := strconv.Atoi(string(c))
-		if err == nil {
-			count++
-		}
-	}
-	return count
 }
