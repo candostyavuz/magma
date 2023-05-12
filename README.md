@@ -1,4 +1,4 @@
-### MAGMA: CLI Tool For Automating Spec Creation
+### MAGMA: A CLI Tool For Automating Spec Creation
 
 ## Installation & Usage
 
@@ -16,7 +16,7 @@ export DOCKER_DEFAULT_PLATFORM=linux/amd64
 go install
 ```
 
-3. Run CLI command with sample input file
+3. Run CLI command with sample input file:
 ```bash
 specautomator genspec input
 ```
