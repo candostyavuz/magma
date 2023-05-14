@@ -40,5 +40,7 @@ func init() {
 	genspecCmd.Flags().String("chain-name", "", "Chain Name")
 	genspecCmd.Flags().String("chain-idx", "", "Chain Index")
 	genspecCmd.Flags().StringArray("imports", nil, "Imports for this spec")
+	genspecCmd.MarkFlagRequired("chain-name")
+	genspecCmd.MarkFlagRequired("chain-idx")
 	rootCmd.AddCommand(genspecCmd)
 }

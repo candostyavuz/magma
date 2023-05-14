@@ -1,7 +1,6 @@
 package magma
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -84,61 +83,14 @@ func GenerateSpec(fileName string, chainNameFlag string, chainIdxFlag string, im
 
 	fmt.Printf("TOTAL METHODS IMPLEMENTED: %d  \n", len(schema.APIMethods))
 
+	dataWithHeader := CreateSpecWithHeader(data, imports, chainNameFlag, chainIdxFlag)
 	// Write the JSON data to a file
-	err = WriteJSONFile("output.json", data, chainNameFlag, chainIdxFlag, imports)
+	err = WriteJSONFile(dataWithHeader)
 	if err != nil {
 		fmt.Println("Error writing JSON file:", err)
-		return nil
+		return err
 	}
 	fmt.Println("JSON file written successfully.")
-
-	return nil
-}
-
-func WriteJSONFile(fileName string, data APIDataList, chainNameFlag string, chainIdxFlag string, imports []string) error {
-	// Write the JSON data to a file
-	file, err := os.Create(fileName)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	dataWithHeader := Proposal{
-		Title:       "Add Specs: " + chainNameFlag,
-		Description: "Adding new specification support for relaying " + chainNameFlag + " data on Lava",
-		Specs: []Spec{
-			{Index: chainIdxFlag,
-				Name:                          chainNameFlag,
-				Enabled:                       Enabled,
-				Imports:                       handleImportsFormat(imports),
-				ReliabilityThreshold:          ReliabilityThreshold,
-				DataReliabilityEnabled:        DataReliabilityEnabled,
-				BlockDistanceForFinalizedData: BlockDistanceForFinalizedData,
-				BlocksInFinalizationProof:     BlocksInFinalizationProof,
-				AverageBlockTime:              AverageBlockTime,
-				AllowedBlockLagForQosSync:     AllowedBlockLagForQosSync,
-				MinStakeProvider: MinStake{
-					Denom:  Denom,
-					Amount: Amount,
-				},
-				MinStakeClient: MinStake{
-					Denom:  Denom,
-					Amount: Amount,
-				},
-				APIs: data,
-			},
-		},
-	}
-	// Marshal the header into JSON format
-	jsonData, err := json.MarshalIndent(dataWithHeader, "", "    ")
-	if err != nil {
-		return err
-	}
-
-	_, err = file.Write(jsonData)
-	if err != nil {
-		return err
-	}
 
 	return nil
 }

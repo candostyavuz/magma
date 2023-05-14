@@ -1,14 +1,12 @@
 package magma
 
 import (
-	"encoding/json"
 	"fmt"
-	"os"
 	"os/exec"
 	"strings"
 )
 
-func GenerateCosmosSpec(endpoint string) error {
+func GenerateCosmosSpec(endpoint string, chainNameFlag string, chainIdxFlag string) error {
 	cmd := exec.Command("grpcurl", "-plaintext", endpoint, "list")
 	out, err := cmd.Output()
 	if err != nil {
@@ -95,65 +93,18 @@ func GenerateCosmosSpec(endpoint string) error {
 	}
 
 	fmt.Printf("TOTAL METHODS IMPLEMENTED: %d  \n", len(subcommands))
-	fmt.Println("IMPORTED CHAINS: ", importableMethods)
 
-	importedSpecs := handleImports(importableMethods)
+	importedSpecs := handleCosmosImports(importableMethods)
 
+	// Generate header of the spec
+	dataWithHeader := CreateSpecWithHeader(data, importedSpecs, chainNameFlag, chainIdxFlag)
 	// Write the JSON data to a file
-	err = WriteJSONFileCosmos("outputCosmos.json", data, importedSpecs)
+	err = WriteJSONFile(dataWithHeader)
 	if err != nil {
 		fmt.Println("Error writing JSON file:", err)
 		return err
 	}
 	fmt.Println("JSON file written successfully.")
-
-	return nil
-}
-
-func WriteJSONFileCosmos(fileName string, data APIDataList, importedChains []string) error {
-	// Write the JSON data to a file
-	file, err := os.Create(fileName)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	dataWithHeader := Proposal{
-		Title:       "Add Specs: ",
-		Description: "Adding new specification support for relaying ",
-		Specs: []Spec{
-			{Index: "",
-				Name:                          "",
-				Enabled:                       Enabled,
-				Imports:                       handleImportsFormat(importedChains),
-				ReliabilityThreshold:          ReliabilityThreshold,
-				DataReliabilityEnabled:        DataReliabilityEnabled,
-				BlockDistanceForFinalizedData: BlockDistanceForFinalizedData,
-				BlocksInFinalizationProof:     BlocksInFinalizationProof,
-				AverageBlockTime:              AverageBlockTime,
-				AllowedBlockLagForQosSync:     AllowedBlockLagForQosSync,
-				MinStakeProvider: MinStake{
-					Denom:  Denom,
-					Amount: Amount,
-				},
-				MinStakeClient: MinStake{
-					Denom:  Denom,
-					Amount: Amount,
-				},
-				APIs: data,
-			},
-		},
-	}
-	// Marshal the header into JSON format
-	jsonData, err := json.MarshalIndent(dataWithHeader, "", "    ")
-	if err != nil {
-		return err
-	}
-
-	_, err = file.Write(jsonData)
-	if err != nil {
-		return err
-	}
 
 	return nil
 }
@@ -193,7 +144,7 @@ func contains(array []string, item string) bool {
 	return false
 }
 
-func handleImports(importableMethods []string) []string {
+func handleCosmosImports(importableMethods []string) []string {
 	importsOut := []string{}
 	var isCosmossdk bool = false
 	var isCosmwasm bool = false
