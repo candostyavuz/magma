@@ -8,24 +8,6 @@ import (
 	"strings"
 )
 
-func isIgnoredMethod(subcommand string) bool {
-	for _, str := range ignoreMethodPrefix {
-		if strings.HasPrefix(subcommand, str) {
-			return true
-		}
-	}
-	return false
-}
-
-func isBaseChain(subcommand string) bool {
-	for _, str := range importedMethodPrefix {
-		if strings.HasPrefix(subcommand, str) {
-			return true
-		}
-	}
-	return false
-}
-
 func GenerateCosmosSpec(endpoint string) error {
 	cmd := exec.Command("grpcurl", "-plaintext", endpoint, "list")
 	out, err := cmd.Output()
@@ -70,6 +52,15 @@ func GenerateCosmosSpec(endpoint string) error {
 				line = strings.TrimPrefix(line, "option (.google.api.http) = { get:")
 				line = strings.TrimSuffix(line, " };")
 				line = strings.ReplaceAll(line, "\"", "")
+
+				// check if description includes base method
+				if isBaseChain(line) {
+					continue
+				}
+				// check if description includes ignored method
+				if isIgnoredMethod(line) {
+					continue
+				}
 
 				parseFunc := "DEFAULT"
 				parseArg := []string{"latest"}
@@ -165,6 +156,32 @@ func WriteJSONFileCosmos(fileName string, data APIDataList, importedChains []str
 	}
 
 	return nil
+}
+
+func isIgnoredMethod(subcommand string) bool {
+	if strings.HasPrefix(subcommand, "/") {
+		subcommand = strings.TrimPrefix(subcommand, "/")
+	}
+
+	for _, str := range ignoreMethodPrefix {
+		if strings.HasPrefix(subcommand, str) {
+			return true
+		}
+	}
+	return false
+}
+
+func isBaseChain(subcommand string) bool {
+	if strings.HasPrefix(subcommand, "/") {
+		subcommand = strings.TrimPrefix(subcommand, "/")
+	}
+
+	for _, str := range importedMethodPrefix {
+		if strings.HasPrefix(subcommand, str) {
+			return true
+		}
+	}
+	return false
 }
 
 func contains(array []string, item string) bool {
