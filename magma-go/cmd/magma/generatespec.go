@@ -9,7 +9,7 @@ import (
 )
 
 var genspecCmd = &cobra.Command{
-	Use:     "genspec [supported-apis-file] | Flags: [--chain-name] , [--chain-idx], [--imports]",
+	Use:     "genspec [supported-apis-file] | Flags: [--chain-name] , [--chain-idx], [--imports]",
 	Aliases: []string{"gen"},
 	Short:   "Generates a valid spec file from a list of supported api calls",
 	Long: `Generates a valid spec file from a list of supported api calls.
