@@ -30,8 +30,8 @@ enum Commands {
     #[command(
         author,
         version,
-        name = "gen-spec",
-        visible_aliases = ["gen", "g"], 
+        name = "genspec",
+        visible_aliases = ["gen", "g", "gen-spec"], 
         about = "Generates a valid spec file from a list of supported api calls. Currently, the only supported input format for the spec file is yaml file"
     )]
     GenerateSpec(GenerateSpecArgs),
