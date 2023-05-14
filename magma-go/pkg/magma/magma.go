@@ -3,11 +3,12 @@ package magma
 import (
 	"encoding/json"
 	"fmt"
-	"gopkg.in/yaml.v3"
 	"io"
 	"os"
 	"strconv"
 	"strings"
+
+	"gopkg.in/yaml.v3"
 )
 
 type Proposal struct {
@@ -20,6 +21,7 @@ type Spec struct {
 	Index                         string      `json:"index"`
 	Name                          string      `json:"name"`
 	Enabled                       bool        `json:"enabled"`
+	Imports                       []string    `json:"imports"`
 	ReliabilityThreshold          uint32      `json:"reliability_threshold"`
 	DataReliabilityEnabled        bool        `json:"data_reliability_enabled"`
 	BlockDistanceForFinalizedData uint64      `json:"block_distance_for_finalized_data"`
@@ -41,7 +43,6 @@ type APIData struct {
 	BlockParsing  BlockParsingData   `json:"block_parsing"`
 	ComputeUnits  string             `json:"compute_units"`
 	Enabled       bool               `json:"enabled"`
-	Imports       []string           `json:"imports"`
 	ApiInterfaces []ApiInterfaceData `json:"api_interfaces"`
 }
 
@@ -132,7 +133,6 @@ func GenerateSpec(fileName string, chainNameFlag string, chainIdxFlag string, im
 			},
 			ComputeUnits: "10",
 			Enabled:      true,
-			Imports:      imports,
 			ApiInterfaces: []ApiInterfaceData{
 				{
 					Category: CategoryData{
@@ -154,7 +154,7 @@ func GenerateSpec(fileName string, chainNameFlag string, chainIdxFlag string, im
 	fmt.Printf("TOTAL METHODS IMPLEMENTED: %d  \n", len(schema.APIMethods))
 
 	// Write the JSON data to a file
-	err = WriteJSONFile("output.json", data, chainNameFlag, chainIdxFlag)
+	err = WriteJSONFile("output.json", data, chainNameFlag, chainIdxFlag, imports)
 	if err != nil {
 		fmt.Println("Error writing JSON file:", err)
 		return nil
@@ -164,7 +164,7 @@ func GenerateSpec(fileName string, chainNameFlag string, chainIdxFlag string, im
 	return nil
 }
 
-func WriteJSONFile(fileName string, data APIDataList, chainNameFlag string, chainIdxFlag string) error {
+func WriteJSONFile(fileName string, data APIDataList, chainNameFlag string, chainIdxFlag string, imports []string) error {
 	// Write the JSON data to a file
 	file, err := os.Create(fileName)
 	if err != nil {
@@ -179,6 +179,7 @@ func WriteJSONFile(fileName string, data APIDataList, chainNameFlag string, chai
 			{Index: chainIdxFlag,
 				Name:                          chainNameFlag,
 				Enabled:                       Enabled,
+				Imports:                       handleImportsFormat(imports),
 				ReliabilityThreshold:          ReliabilityThreshold,
 				DataReliabilityEnabled:        DataReliabilityEnabled,
 				BlockDistanceForFinalizedData: BlockDistanceForFinalizedData,
@@ -209,4 +210,17 @@ func WriteJSONFile(fileName string, data APIDataList, chainNameFlag string, chai
 	}
 
 	return nil
+}
+
+func handleImportsFormat(imports []string) []string {
+	var newImports []string
+	for _, imp := range imports {
+		imp = strings.TrimSpace(imp)
+		if imp == "" {
+			continue
+		}
+		parts := strings.Split(imp, " ")
+		newImports = append(newImports, parts...)
+	}
+	return newImports
 }

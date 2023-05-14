@@ -1,9 +1,9 @@
 chain-type: ETH
 api_methods:
 - name: eth_blockNumber
-  args: 1
+  args: 0
 - name: eth_sendRawTransaction
-  args: 1
+  args: 0
 - name: eth_getBalance
   args: 2
 - name: eth_getStorageAt

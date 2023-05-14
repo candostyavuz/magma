@@ -2,6 +2,7 @@ package magma
 
 import (
 	"fmt"
+
 	"github.com/candostyavuz/magma/pkg/magma"
 
 	"github.com/spf13/cobra"
@@ -16,8 +17,8 @@ var genspecCmd = &cobra.Command{
 	Args: cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println("File is: ", args[0])
-		imports, err := cmd.Flags().GetStringArray("import")
-		fmt.Println(imports)
+		imports, err := cmd.Flags().GetStringArray("imports")
+		fmt.Println("Imported specs: ", imports)
 		if err != nil {
 			return err
 		}
@@ -38,6 +39,6 @@ var genspecCmd = &cobra.Command{
 func init() {
 	genspecCmd.Flags().String("chain-name", "", "Chain Name")
 	genspecCmd.Flags().String("chain-idx", "", "Chain Index")
-	genspecCmd.Flags().StringArray("import", nil, "Imports for this spec")
+	genspecCmd.Flags().StringArray("imports", nil, "Imports for this spec")
 	rootCmd.AddCommand(genspecCmd)
 }
