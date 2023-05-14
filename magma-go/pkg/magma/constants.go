@@ -12,6 +12,10 @@ const (
 	Amount                        = "50000000000"
 )
 
+var importedMethodPrefix = [3]string{"cosmos", "cosmwasm", "ibc"}
+var ignoreMethodPrefix = [4]string{"grpc", "icq", "testdata", "gaia"}
+var importedChainNames = [4]string{"COSMOSSDK", "COSMOSWASM", "IBC", "COSMOSSDKFULL"}
+
 type Proposal struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
