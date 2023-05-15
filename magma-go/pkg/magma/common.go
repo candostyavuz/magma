@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func CreateSpecWithHeader(data APIDataList, importedChains []string, chainNameFlag string, chainIdxFlag string) Proposal {
+func CreateSpecWithHeader(data []APIData, importedChains []string, chainNameFlag string, chainIdxFlag string) Proposal {
 	headerData := Proposal{
 		Title:       "Add Specs: " + chainNameFlag,
 		Description: "Adding new specification support for relaying " + chainNameFlag + " data on Lava",
