@@ -13,20 +13,20 @@ export PATH="/opt/homebrew/opt/libpq/bin:$GOPATH:$GOBIN:$PATH"
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 ```
 
-2. Install dependencies:
+3. Install dependencies:
 ```bash
 go install
 ```
 
 ## Usage
 # For EVM Chains:
-3. Run CLI command with sample `input.yaml` file:
+Run CLI command with sample `input.yaml` file:
 ```bash
 magma gen-evm-spec input.yaml --chain-name <CHAIN_NAME> --chain-idx <CHAIN_IDX>
 ```
 
 # For Cosmos Chains:
-3. Run CLI command with a valid Chain node endpoint. The program will automatically:
+Run CLI command with a valid Chain node endpoint. The program will automatically:
     - Fetch supported API methods
     - Handle spec inheritence (Base Chain imports)
     - Detect & discard ignored methods
