@@ -5,6 +5,11 @@ use crate::{
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
+pub struct ProposalFile {
+    pub proposal: Proposal,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Proposal {
     title: String,
     description: String,
@@ -35,9 +40,11 @@ pub struct Spec {
     min_stake_client: MinStake,
 
     #[serde(skip_serializing_if = "Vec::is_empty")]
+    #[serde(default)]
     pub imports: Vec<NetworkName>,
 
     #[serde(skip_serializing_if = "Vec::is_empty")]
+    #[serde(default)]
     pub apis: Vec<ApiData>,
 }
 
@@ -57,9 +64,18 @@ pub struct ApiData {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum ParseFunc {
+    Empty,
+    Default,
+    ParseByArg,
+    ParseCanonical,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct BlockParsingData {
-    parse_arg: Vec<String>,
-    parse_func: String,
+    parser_arg: Vec<String>,
+    parser_func: ParseFunc,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -164,8 +180,8 @@ impl From<ApiMethod> for ApiData {
         Self {
             name: api.name().to_string(),
             block_parsing: BlockParsingData {
-                parse_arg: vec![api.parse_arg()],
-                parse_func: api.parse_func(),
+                parser_arg: vec![api.parse_arg()],
+                parser_func: api.parse_func(),
             },
             compute_units: constants::COMPUTE_UNITS.to_string(),
             enabled: constants::API_ENABLED,

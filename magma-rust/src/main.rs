@@ -2,6 +2,7 @@ pub mod constants;
 pub mod generate_spec;
 pub mod input;
 pub mod proposal;
+pub mod validate;
 
 use std::path::PathBuf;
 
@@ -28,13 +29,17 @@ struct Cli {
 #[derive(Subcommand)]
 enum Commands {
     #[command(
-        author,
-        version,
         name = "genspec",
         visible_aliases = ["gen", "g", "gen-spec"], 
-        about = "Generates a valid spec file from a list of supported api calls. Currently, the only supported input format for the spec file is yaml file"
+        about = "Generates a valid proposal file from a list of supported api calls. Currently, the only supported input format for the spec file is yaml file"
     )]
     GenerateSpec(GenerateSpecArgs),
+
+    #[command(
+        visible_aliases = ["validate-proposal"], 
+        about = "Generates a valid spec file from a list of supported api calls. Currently, the only supported input format for the spec file is yaml file"
+    )]
+    Validate(ValidateArgs),
 }
 
 #[derive(Parser)]
@@ -54,6 +59,11 @@ pub struct GenerateSpecArgs {
     pub output_file: Option<PathBuf>,
 }
 
+#[derive(Parser, Debug, Clone)]
+pub struct ValidateArgs {
+    pub input_file: PathBuf,
+}
+
 fn main() -> Result<()> {
     color_eyre::install()?;
     env_logger::init();
@@ -71,6 +81,12 @@ fn main() -> Result<()> {
 
             let gen_spec = generate_spec::GenerateSpec::try_new(gen_spec)?;
             gen_spec.run()?;
+        }
+        Commands::Validate(validate_args) => {
+            println!("{}", "Validating spec file");
+
+            let validate_args = validate::Validate::try_new(validate_args)?;
+            validate_args.run()?;
         }
     };
 

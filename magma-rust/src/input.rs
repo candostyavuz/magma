@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::proposal::NetworkName;
+use crate::proposal::{NetworkName, ParseFunc};
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 #[serde(untagged)]
@@ -46,10 +46,10 @@ impl ApiMethod {
         }
     }
 
-    pub fn parse_func(&self) -> String {
+    pub fn parse_func(&self) -> ParseFunc {
         match self {
-            ApiMethod::JustMethod(_) => "DEFAULT".to_string(),
-            ApiMethod::WithArgs(_) => "PARSE_BY_ARG".to_string(),
+            ApiMethod::JustMethod(_) => ParseFunc::Default,
+            ApiMethod::WithArgs(_) => ParseFunc::ParseByArg,
         }
     }
 }
