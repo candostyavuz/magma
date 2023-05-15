@@ -41,9 +41,7 @@ func GenerateSpec(fileName string, chainNameFlag string, chainIdxFlag string, im
 	}
 
 	//build structure to contain the Output
-	data := APIDataList{
-		Apis: make([]APIData, 0),
-	}
+	data := make([]APIData, 0)
 
 	//iterate through the API methods and pass them into the Output structure
 	for _, method := range schema.APIMethods {
@@ -77,7 +75,7 @@ func GenerateSpec(fileName string, chainNameFlag string, chainIdxFlag string, im
 				},
 			},
 		}
-		data.Apis = append(data.Apis, newData)
+		data = append(data, newData)
 		fmt.Printf("Method Implemented: %v \n", method.Name)
 	}
 

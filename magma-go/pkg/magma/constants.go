@@ -23,19 +23,19 @@ type Proposal struct {
 }
 
 type Spec struct {
-	Index                         string      `json:"index"`
-	Name                          string      `json:"name"`
-	Enabled                       bool        `json:"enabled"`
-	Imports                       []string    `json:"imports"`
-	ReliabilityThreshold          uint32      `json:"reliability_threshold"`
-	DataReliabilityEnabled        bool        `json:"data_reliability_enabled"`
-	BlockDistanceForFinalizedData uint64      `json:"block_distance_for_finalized_data"`
-	BlocksInFinalizationProof     uint8       `json:"blocks_in_finalization_proof"`
-	AverageBlockTime              string      `json:"average_block_time"`
-	AllowedBlockLagForQosSync     string      `json:"allowed_block_lag_for_qos_sync"`
-	MinStakeProvider              MinStake    `json:"min_stake_provider"`
-	MinStakeClient                MinStake    `json:"min_stake_client"`
-	APIs                          APIDataList `json:"apis"`
+	Index                         string    `json:"index"`
+	Name                          string    `json:"name"`
+	Enabled                       bool      `json:"enabled"`
+	Imports                       []string  `json:"imports"`
+	ReliabilityThreshold          uint32    `json:"reliability_threshold"`
+	DataReliabilityEnabled        bool      `json:"data_reliability_enabled"`
+	BlockDistanceForFinalizedData uint64    `json:"block_distance_for_finalized_data"`
+	BlocksInFinalizationProof     uint8     `json:"blocks_in_finalization_proof"`
+	AverageBlockTime              string    `json:"average_block_time"`
+	AllowedBlockLagForQosSync     string    `json:"allowed_block_lag_for_qos_sync"`
+	MinStakeProvider              MinStake  `json:"min_stake_provider"`
+	MinStakeClient                MinStake  `json:"min_stake_client"`
+	APIs                          []APIData `json:"apis"`
 }
 
 type MinStake struct {
@@ -68,10 +68,6 @@ type CategoryData struct {
 	Local         bool `json:"local"`
 	Subscription  bool `json:"subscription"`
 	Stateful      int  `json:"stateful"`
-}
-
-type APIDataList struct {
-	Apis []APIData `json:"apis"`
 }
 
 type InputTemplate struct {

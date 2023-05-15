@@ -16,9 +16,7 @@ func GenerateCosmosSpec(endpoint string, chainNameFlag string, chainIdxFlag stri
 	var importableMethods []string
 
 	//build structure to contain the Output
-	data := APIDataList{
-		Apis: make([]APIData, 0),
-	}
+	data := make([]APIData, 0)
 
 	subcommands := strings.Split(strings.TrimSpace(string(out)), "\n")
 
@@ -85,7 +83,7 @@ func GenerateCosmosSpec(endpoint string, chainNameFlag string, chainIdxFlag stri
 						},
 					},
 				}
-				data.Apis = append(data.Apis, newData)
+				data = append(data, newData)
 				fmt.Printf("Method Implemented: %v \n", line)
 			}
 		}
