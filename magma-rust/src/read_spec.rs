@@ -33,14 +33,14 @@ impl ReadSpec {
 
         for spec in self.proposal.specs {
             println!("\nSpec: {}", spec.name);
-            println!(" Index: {}", spec.index);
+            println!("Index: {}", spec.index);
 
             if !spec.imports.is_empty() {
-                println!(" Imports: {:?}", spec.imports);
+                println!("Imports: {:?}", spec.imports);
             }
 
             if !spec.apis.is_empty() {
-                println!(" Number of APIs: {}", spec.apis.len());
+                println!("Number of APIs: {}", spec.apis.len());
             }
 
             if self.args.print_all && !spec.apis.is_empty() {
