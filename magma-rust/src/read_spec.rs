@@ -43,7 +43,7 @@ impl ReadSpec {
                 println!(" Number of APIs: {}", spec.apis.len());
             }
 
-            if self.args.print_all {
+            if self.args.print_all && !spec.apis.is_empty() {
                 println!(" APIs: ");
                 for api in spec.apis {
                     println!(" - {}", api.name);
