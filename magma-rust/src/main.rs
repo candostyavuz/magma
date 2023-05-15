@@ -2,6 +2,7 @@ pub mod constants;
 pub mod generate_spec;
 pub mod input;
 pub mod proposal;
+pub mod read_spec;
 pub mod validate;
 
 use std::path::PathBuf;
@@ -40,6 +41,12 @@ enum Commands {
         about = "Generates a valid spec file from a list of supported api calls. Currently, the only supported input format for the spec file is yaml file"
     )]
     Validate(ValidateArgs),
+
+    #[command(
+        visible_aliases = ["read-proposal"], 
+        about = "Reads and returns information about a proposal file"
+    )]
+    ReadSpec(ReadSpecArgs),
 }
 
 #[derive(Parser)]
@@ -62,6 +69,14 @@ pub struct GenerateSpecArgs {
 #[derive(Parser, Debug, Clone)]
 pub struct ValidateArgs {
     pub input_file: PathBuf,
+}
+
+#[derive(Parser, Debug, Clone)]
+pub struct ReadSpecArgs {
+    pub input_file: PathBuf,
+
+    #[arg(short, long, help = "Print all implemented APIs", required = false)]
+    pub print_all: bool,
 }
 
 fn main() -> Result<()> {
@@ -87,6 +102,12 @@ fn main() -> Result<()> {
 
             let validate_args = validate::Validate::try_new(validate_args)?;
             validate_args.run()?;
+        }
+        Commands::ReadSpec(read_spec_args) => {
+            println!("{}", "Reading spec file");
+
+            let read_spec_args = read_spec::ReadSpec::try_new(read_spec_args)?;
+            read_spec_args.run()?;
         }
     };
 

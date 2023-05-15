@@ -11,33 +11,33 @@ pub struct ProposalFile {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Proposal {
-    title: String,
-    description: String,
-    specs: Vec<Spec>,
+    pub title: String,
+    pub description: String,
+    pub specs: Vec<Spec>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Spec {
-    index: NetworkName,
-    name: String,
+    pub index: NetworkName,
+    pub name: String,
     #[serde(default = "constants::spec_enabled")]
-    enabled: bool,
+    pub enabled: bool,
     #[serde(default = "constants::reliability_threshold")]
-    reliability_threshold: u32,
+    pub reliability_threshold: u32,
     #[serde(default = "constants::data_reliability_enabled")]
-    data_reliability_enabled: bool,
+    pub data_reliability_enabled: bool,
     #[serde(default = "constants::block_distance_for_finalized_data")]
-    block_distance_for_finalized_data: u64,
+    pub block_distance_for_finalized_data: u64,
     #[serde(default = "constants::blocks_in_finalization_proof")]
-    blocks_in_finalization_proof: u8,
+    pub blocks_in_finalization_proof: u8,
     #[serde(default = "constants::average_block_time")]
-    average_block_time: String,
+    pub average_block_time: String,
     #[serde(default = "constants::allowed_block_lag_for_qos_sync")]
-    allowed_block_lag_for_qos_sync: String,
+    pub allowed_block_lag_for_qos_sync: String,
     #[serde(default)]
-    min_stake_provider: MinStake,
+    pub min_stake_provider: MinStake,
     #[serde(default)]
-    min_stake_client: MinStake,
+    pub min_stake_client: MinStake,
 
     #[serde(skip_serializing_if = "Vec::is_empty")]
     #[serde(default)]
@@ -56,7 +56,7 @@ pub struct MinStake {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ApiData {
-    name: String,
+    pub name: String,
     block_parsing: BlockParsingData,
     compute_units: String,
     enabled: bool,
