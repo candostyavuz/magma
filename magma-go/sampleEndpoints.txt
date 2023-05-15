@@ -1,0 +1,6 @@
+Cosmos Chain Endpoint Examples:
+
+grpc.osmosis.zone:9090
+canto-grpc.polkachu.com:15590
+grpc-axelar.stakerun.com:9090
+canto-grpc.polkachu.com:15590

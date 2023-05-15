@@ -1,6 +1,8 @@
 ### MAGMA: A CLI Tool For Automating Spec Creation
+Introducing Magma - the simple and robust command-line tool for generating and evaluating Lava specifications.
+Onboard new chains with ease, for both EVM and Cosmos SDK chains.
 
-## Installation & Usage
+## Installation
 
 1. Copy the repo
 2. Export GO path into working directory:
@@ -16,17 +18,25 @@ export DOCKER_DEFAULT_PLATFORM=linux/amd64
 go install
 ```
 
-3. Run CLI command with sample input file:
+## Usage
+# For EVM Chains:
+3. Run CLI command with sample `input.yaml` file:
 ```bash
-magma genspec input
+magma gen-evm-spec input.yaml --chain-name <CHAIN_NAME> --chain-idx <CHAIN_IDX>
 ```
 
-4. You can use flags:
-```bash
-magma genspec input --chain-name Ethereum --chain-idx ETH1
-```
+# For Cosmos Chains:
+3. Run CLI command with a valid Chain node endpoint. The program will automatically:
+    - Fetch supported API methods
+    - Handle spec inheritence (Base Chain imports)
+    - Detect & discard ignored methods
 
-5. Generated spec will be written into `output.json` file 
+```bash
+magma gen-cosmos-spec grpc.osmosis.zone:9090 --chain-name Osmosis --chain-idx COS3
+```
+-----
+
+Generated spec will be written into `output.json` file (default)
 
 
 
