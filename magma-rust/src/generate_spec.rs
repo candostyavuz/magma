@@ -1,4 +1,5 @@
 use crate::GenerateSpecArgs;
+use crate::proposal::ProposalFile;
 use crate::{input, proposal::Proposal};
 use colored::Colorize;
 use eyre::{Result, WrapErr};
@@ -43,7 +44,7 @@ impl GenerateSpec {
         Ok(())
     }
 
-    fn create_proposal_struct(self) -> Proposal {
+    fn create_proposal_struct(self) -> ProposalFile{
         let full_title = if let Some(title) = self.args.title {
             title
         } else {
@@ -57,6 +58,8 @@ impl GenerateSpec {
         };
 
         let specs = self.input.0.into_iter().map(Into::into).collect();
-        Proposal::new(full_title, description, specs)
+        let proposal = Proposal::new(full_title, description, specs);
+
+        ProposalFile{proposal}
     }
 }
