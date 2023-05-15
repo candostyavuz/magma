@@ -8,9 +8,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var genspecCmd = &cobra.Command{
-	Use:     "genspec [supported-apis-file] | Flags: [--chain-name] , [--chain-idx], [--imports]",
-	Aliases: []string{"gen"},
+var genevmCmd = &cobra.Command{
+	Use:     "gen-evm-spec [supported-apis-file] | Flags: [--chain-name] , [--chain-idx], [--imports]",
+	Aliases: []string{"genevm"},
 	Short:   "Generates a valid spec file from a list of supported api calls",
 	Long: `Generates a valid spec file from a list of supported api calls.
 	Currently, the only supported input format for the spec file is txt file.`,
@@ -37,10 +37,10 @@ var genspecCmd = &cobra.Command{
 }
 
 func init() {
-	genspecCmd.Flags().String("chain-name", "", "Chain Name")
-	genspecCmd.Flags().String("chain-idx", "", "Chain Index")
-	genspecCmd.Flags().StringArray("imports", nil, "Imports for this spec")
-	genspecCmd.MarkFlagRequired("chain-name")
-	genspecCmd.MarkFlagRequired("chain-idx")
-	rootCmd.AddCommand(genspecCmd)
+	genevmCmd.Flags().String("chain-name", "", "Chain Name")
+	genevmCmd.Flags().String("chain-idx", "", "Chain Index")
+	genevmCmd.Flags().StringArray("imports", nil, "Imports for this spec")
+	genevmCmd.MarkFlagRequired("chain-name")
+	genevmCmd.MarkFlagRequired("chain-idx")
+	rootCmd.AddCommand(genevmCmd)
 }
